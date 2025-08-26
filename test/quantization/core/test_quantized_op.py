@@ -7,7 +7,6 @@ import itertools
 import numpy as np
 import operator
 import random
-import sys
 import unittest
 from packaging.version import Version
 from typing import NamedTuple
