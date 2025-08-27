@@ -378,6 +378,7 @@ class DTensorTestBase(MultiProcessTestCase):
             sys.exit(TEST_SKIPS[f"multi-gpu-{self.world_size}"].exit_code)
 
         if backend is None:
+            print(f"backend: {self.backend}, device_type={self.device_type}")
             backend = self.backend
 
         if backend not in [
@@ -394,7 +395,7 @@ class DTensorTestBase(MultiProcessTestCase):
         device_id = None
         if "nccl" in backend or "xccl" in backend:
             # set device for nccl pg for collectives
-            torch.accelerator.set_device_index(self.rank)
+            torch.accelerator.set_device_index(self.rank % 8)
             # we only need to set device_id for nccl backend with eager init
             device_id = (
                 torch.device(f"{self.device_type}:{self.rank}") if eager_init else None
@@ -418,7 +419,9 @@ class DTensorTestBase(MultiProcessTestCase):
         #  test_dtensor.py  -- DTensorMeshTest.test_dtensor_device_mesh_device_conversion
         if device_id is None:
             device_id = (
-                torch.cuda.current_device() if self.device_type == "cuda" else self.rank
+                torch.cuda.current_device()
+                if self.device_type == "cuda"
+                else self.rank % 8
             )
         dist.barrier(device_ids=[device_id])
         dist.destroy_process_group()
