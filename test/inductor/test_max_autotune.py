@@ -115,7 +115,6 @@ class TestMaxAutotune(TestCase):
         with config.patch({"max_autotune": True}):
             torch.compile(mm_plus_mm, dynamic=dynamic)(a, b, c, d)
 
-    @skipIfXpu(msg="Template configuration heuristic for XPU has not been implemented")
     @unittest.skipIf(
         not has_triton_tma_device(), "Need device-side TMA support in Triton"
     )
@@ -166,7 +165,6 @@ class TestMaxAutotune(TestCase):
 
         torch.testing.assert_close(c_actual, c_expected, atol=1e-2, rtol=1e-2)
 
-    @skipIfXpu(msg="Template configuration heuristic for XPU has not been implemented")
     @unittest.skipIf(
         not has_triton_tma_device(), "Need device-side TMA support in Triton"
     )
@@ -228,7 +226,6 @@ class TestMaxAutotune(TestCase):
             check_str = "triton.language.make_tensor_descriptor"
         FileCheck().check("triton_tem_fused_mm").check(check_str).run(code[0])
 
-    @skipIfXpu(msg="Template configuration heuristic for XPU has not been implemented")
     @unittest.skipIf(
         not has_triton_tma_device(), "Need device-side TMA support in Triton"
     )
@@ -258,7 +255,6 @@ class TestMaxAutotune(TestCase):
         # given the config flags above, we should have no choices left.
         self.assertIn("NoValidChoicesError", str(context.exception))
 
-    @skipIfXpu(msg="Template configuration heuristic for XPU has not been implemented")
     @unittest.skipIf(
         not has_triton_tma_device(), "Need device-side TMA support in Triton"
     )
@@ -306,7 +302,6 @@ class TestMaxAutotune(TestCase):
         with config.patch({"max_autotune": True}):
             torch.compile(mm, dynamic=dynamic)(a, b)
 
-    @skipIfXpu(msg="Template configuration heuristic for XPU has not been implemented")
     @unittest.skipIf(
         not has_triton_tma_device(), "Need device-side TMA support in Triton"
     )
@@ -359,7 +354,6 @@ class TestMaxAutotune(TestCase):
 
         torch.testing.assert_close(c_actual, c_expected, atol=1e-2, rtol=1e-2)
 
-    @skipIfXpu(msg="Template configuration heuristic for XPU has not been implemented")
     @unittest.skipIf(
         not has_triton_tma_device(), "Need device-side TMA support in Triton"
     )
@@ -390,7 +384,6 @@ class TestMaxAutotune(TestCase):
         # given the config flags above, we should have no choices left.
         self.assertIn("NoValidChoicesError", str(context.exception))
 
-    @skipIfXpu(msg="Template configuration heuristic for XPU has not been implemented")
     @unittest.skipIf(
         not has_triton_tma_device(), "Need device-side TMA support in Triton"
     )
@@ -425,7 +418,7 @@ class TestMaxAutotune(TestCase):
         torch.testing.assert_close(c_actual, c_expected, atol=1e-2, rtol=1e-2)
 
     @fresh_cache()
-    @skipIfXpu(msg="Template configuration heuristic for XPU has not been implemented")
+    @skipIfXpu(msg="XPU doesn't support sm carveout")
     @unittest.skipIf(TEST_WITH_ROCM, "ROCm doesn't support sm carveout")
     @unittest.skipIf(IS_WINDOWS, "Windows doesn't support persistent TMA")
     @unittest.skipIf(
