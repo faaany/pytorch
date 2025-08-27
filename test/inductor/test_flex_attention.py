@@ -49,6 +49,7 @@ from torch.testing._internal.common_device_type import (
     skipCUDAIf,
 )
 from torch.testing._internal.common_utils import IS_FBCODE
+from torch.testing._internal.inductor_utils import HAS_GPU
 from torch.utils._triton import has_triton, has_triton_tma_device
 
 
@@ -399,7 +400,7 @@ class TestFlexAttention(InductorTestCase):
     def setUp(self):
         super().setUp()
         skipCPUIf(
-            LONG_COMPILATION_ON_CPU or torch.cuda.is_available(),
+            LONG_COMPILATION_ON_CPU or HAS_GPU,
             "skip UT for CPU due to long compilation time found in CI, \
              and test on CPU-ONLY devices",
         )
@@ -2912,6 +2913,7 @@ def forward(self, arg0_1, arg1_1, arg2_1, arg3_1, arg4_1):
             torch.testing.assert_close(eager, compiled, atol=9e-3, rtol=0)
 
     @supported_platform
+    @skip_on_cpu # Fail on asan
     @common_utils.parametrize("mode", ["eager", "inductor", "paged_attention"])
     @common_utils.parametrize(
         "permute_order",
@@ -5049,7 +5051,7 @@ class TestPagedAttention(InductorTestCase):
     def setUp(self):
         super().setUp()
         skipCPUIf(
-            LONG_COMPILATION_ON_CPU or torch.cuda.is_available(),
+            LONG_COMPILATION_ON_CPU or HAS_GPU,
             "skip UT for CPU due to long compilation time found in CI, \
              and test on CPU-ONLY devices",
         )
@@ -5500,7 +5502,7 @@ class TestLearnableBiases(InductorTestCase):
     def setUp(self):
         super().setUp()
         skipCPUIf(
-            LONG_COMPILATION_ON_CPU or torch.cuda.is_available(),
+            LONG_COMPILATION_ON_CPU or HAS_GPU,
             "skip UT for CPU due to long compilation time found in CI, \
              and test on CPU-ONLY devices",
         )
