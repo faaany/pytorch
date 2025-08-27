@@ -214,12 +214,13 @@ def run_test_plan(
 
 
 def clone_vllm(dst: str = "vllm"):
-    clone_external_repo(
+    _, commit = clone_external_repo(
         target="vllm",
         repo="https://github.com/vllm-project/vllm.git",
         dst=dst,
         update_submodules=True,
     )
+    return commit
 
 
 def replace_buildkite_placeholders(step: str, shard_id: int, num_shards: int) -> str:
