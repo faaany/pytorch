@@ -160,7 +160,7 @@ bool onednn_strides_check(const Tensor& src) {
   int perm[DNNL_MAX_NDIMS] = {0};
   for (int d = 0; d < md_ndims; ++d) {
     // no strides check needed for empty tensor
-    if (md_padded_dims[d] == nullptr)
+    if (md_padded_dims[d][0] == nullptr)
       return true;
 
     // no strides verification for runtime dims
@@ -178,10 +178,10 @@ bool onednn_strides_check(const Tensor& src) {
 
   // A custom comparator to yield linear order on perm
   auto idx_sorter = [&](const int a, const int b) -> bool {
-    if (strides[a] == strides[b] && md_padded_dims[a] == md_padded_dims[b])
+    if (strides[a] == strides[b] && md_padded_dims[a][0] == md_padded_dims[b][0])
       return a < b;
     else if (strides[a] == strides[b])
-      return md_padded_dims[a] < md_padded_dims[b];
+      return md_padded_dims[a][0] < md_padded_dims[b][0];
     else
       return strides[a] < strides[b];
   };
